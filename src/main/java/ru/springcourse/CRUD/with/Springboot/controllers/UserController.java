@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.springcourse.CRUD.with.Springboot.models.User;
 import ru.springcourse.CRUD.with.Springboot.service.UserService;
+import ru.springcourse.CRUD.with.Springboot.service.UserServiceImp;
 
 
 import javax.validation.Valid;
@@ -15,22 +16,23 @@ import javax.validation.Valid;
 @RequestMapping("/")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserServiceImp userService) {
         this.userService = userService;
     }
 
+
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("users", userService.index());
+        model.addAttribute("users", userService.findAll());
         return "users/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("User", userService.show(id));
+        model.addAttribute("User", userService.findOne(id));
         return "users/show";
     }
 
@@ -48,7 +50,7 @@ public class UserController {
 
     @GetMapping("/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("User", userService.show(id));
+        model.addAttribute("User", userService.findOne(id));
         return "users/edit";
     }
 
